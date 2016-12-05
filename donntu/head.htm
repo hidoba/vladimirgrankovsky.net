@@ -1,0 +1,67 @@
+<div id="logo" style="font-size: 2em; position:absolute; top: 57px; left: 90px">
+    <p id="main_name">Владимир Гранковский</p>
+</div>
+<div id="links" style="top:70px; left:450px; position:absolute">
+    <ul>
+        <li style="float:left; padding-right: 40px"><a href="http://vladimirgrankovsky.net" id="link1_mysite">Мой основной сайт</a></li>
+        <li style="float:left; padding-right: 40px"><a href="index.htm" id="link2_aboutme">Про меня</a></li>
+        <li style="float:left; padding-right: 40px"><a href="thesis.htm" id="link3_aboutproject">Про мою магистерскую</a></li>
+    </ul>
+</div>
+<div id="languages">
+    <ul style="opacity:0.3">
+        <li style="float:left; padding-right: 10px"><a href="" id="lang_ru">Русский</a></li>
+        <li style="float:left; padding-right: 10px"><a href="" id="lang_ua">Українська</a></li>
+        <li style="float:left; padding-right: 20px"><a href="" id="lang_eng">English</a></li>
+    </ul>
+</div>
+<script type="text/javascript">
+    function neutralizeLink(element){
+        $(element).replaceWith($(element).text());
+    }
+    function setLanguage(new_lang){
+        setCookie("lang",new_lang,1);
+        location.reload();
+    }
+    $("#lang_ru").click(function(){
+        setLanguage("ru");
+        return false;
+    });
+    $("#lang_ua").click(function(){
+        setLanguage("ua");
+        return false;
+    });
+    $("#lang_eng").click(function(){
+        setLanguage("eng");
+        return false;
+    });
+
+    neutralizeLink("#lang_" + lang);
+    if(lang=="ua"){
+        $("#main_name").html("Володимир Гранковський");
+        $("#link1_mysite").html("Мій головний сайт");
+        $("#link2_aboutme").html("Про мене");
+        $("#link3_aboutproject").html("Про мою дипломну");
+    }
+    if(lang=="eng"){
+        $("#main_name").html("Vladimir Grankovsky");
+        $("#link1_mysite").html("My primary site");
+        $("#link2_aboutme").html("About me");
+        $("#link3_aboutproject").html("About my Master thesis");
+    }
+
+    /*
+    if(document.URL.match(/index/)){
+        neutralizeLink("#link2_aboutme");
+    }*/
+    //$('head').append('<link rel="stylesheet" href="http://vladimirgrankovsky.net/donntu/css/base.css" />');
+    if(document.URL.match(/thesis/)){
+        neutralizeLink("#link3_aboutproject");
+        //$('head').append('<link rel="stylesheet" href="http://vladimirgrankovsky.net/donntu/css/thesis.css" />');
+    } else {
+        neutralizeLink("#link2_aboutme");
+        //$('head').append('<link rel="stylesheet" href="http://vladimirgrankovsky.net/donntu/css/curtain.css" />');
+
+    }
+
+</script>

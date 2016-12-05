@@ -1,0 +1,150 @@
+<div id="head"></div>
+<script type="text/javascript">
+    document.title="Владимир Гранковский — страница про магистерскую";
+    loadToElement("http://vladimirgrankovsky.net/donntu/head.htm","", "#head");
+</script>
+
+<div id="docs" class="panel docs" style="background-color:white;">
+      <div class="inner">
+        <div class="docs-nav-wrapper">
+          <ul class="docs-nav">
+            <li>
+              <a href="#doc-thesis">Моя магистерская</a>
+              <ul>
+                <li><a href="#doc-about">К чему это</a></li>
+              </ul>
+            </li>
+
+            <li>
+              <a href="#doc-EEG">Как я собрал ЭЭГ</a>
+              <ul>
+                <li><a href="#doc-EEG-analog">Аналоговое</a></li>
+                <li><a href="#doc-EEG-digital">Цифровое</a></li>
+                <li><a href="#doc-EEG-result">Результат</a></li>
+              </ul>
+            </li>
+            <li>
+              <a href="#doc-SGR">Как я мерял КГР</a>
+              <ul>
+                <li><a href="#doc-SGR-result">Результат</a></li>
+              </ul>
+            </li>
+            <li>
+              <a href="#doc-links">Чтиво в тему</a>
+            </li>
+          </ul>
+        </div>
+
+        <div id="doc-thesis" class="doc-section" style="padding-top:130px;">
+          <h2>Моя магистерская</h2>
+          <p>Однажды я почитал в интернете о занимательных опытах, когда людям на голову надевают странное устройство, которые считывает психологическое состояние или команды пользователя (внизу страницы есть много ссылок).</p><p>Мне стало интересно, и я сделал что-то такое.</p><p><img src="http://vladimirgrankovsky.net/donntu/img/thesis1.jpg" style="width:100%" height="341" alt="EEG" /></p>
+            <div id="doc-about" class="doc-section">
+                <h3>К чему это</h3>
+                    <p>Речь идет об интерфейсе мозг-компьютер. Это когда осуществляется прямой поток информации между мозгом и компьютером. Бывает еще мозг-мозг (да, уже <a href="http://www.nature.com/srep/2013/130228/srep01319/full/srep01319.html">сделали</a>).</p>
+                    <p>Интерфейс мозг-компьютер это круто. Потому что так человек может управлять компьютером (вспомним Стивена Хокинга). И потому что так можно управлять мозгом. Можно переключать отдельные нейроны (см. оптогенетика). И потому что можно выключать болезнь Паркинсона (внизу интересные ссылки обо всем этом).</p>
+            </div>
+        </div>
+
+        <div id="doc-EEG" class="doc-section">
+          <h2>Как я собрал ЭЭГ</h2>
+          <p>Если ты хочешь собрать ЭЭГ, напрашивается первый вопрос: как это сделать?</p>
+          <p><em>Короткий ответ</em> (вывод из моей работы): не нужно собирать энцефалограф. Лучше купить готовый недорого <a href="http://www.emotiv.com/">тут</a> (мне мышка нашептала, что его взломали, и что для исследовательского использования не обязательно платить кучу денег).</p>
+          <p><em>Более полный ответ:</em> в принципе, можно делать энцефалограф самому, как я. Дальше описано, как. Но я не советую, потому что обязательно возникнут проблемы. С шумом, с наводками 50 Гц, и еще с чем-нибудь, о чем нельзя подозревать заранее (прецизионная аналоговая электроника — она капризна).</p>
+          <p>Энцефалограф состоит из аналоговой и цифровой частей. Аналоговая меряет сигналы, снимаемые с датчиков, усиливает их, оцифровывает, а также осуществляет обратную связь (RLD) и опционально давит определенные частоты. Цифровая часть берет результат с АЦП и делает с ним, то что нужно (например, передает на компьютер по USB или отправляет по радио).</p>
+            <div id="doc-EEG-analog" class="doc-section">
+                <h3>Аналоговое</h3>
+                <p>Аналоговая плата содержит входы с датчиков, усилители, АЦП и регуляторы напряжения для всего этого. Общий вид получился такой:</p>
+                <div class="wide_img"><img src="http://vladimirgrankovsky.net/donntu/img/thesis2.jpg" alt="Аналоговая плата" height="680" style="width:100%" /></div>
+                <p>(На самом деле это вторая версия)</p>
+                <p>В шлеме с датчиками находятся усилители с коэффициентом усиления 1. Это уменьшает влияние наводок и шумов на провода между датчиками и энцефалографом.</p>
+                <p>Структурная схема входных цепей (с датчиков) очень похожа на аналогичную в OpenEEG. Используются инструментальные усилители INA114/INA128. Выход поступает на вход АЦП. При помощи перемычек в эту цепь можно скоммутировать пленочный конденсатор (желтые коробочки). АЦП — специализированная микросхема для кардиографов ADS1298 (8 каналов, 24 бита, до 32 килосемплов в секунду с понижением точности).</p>
+                <p>Когда я проектировал аналоговую плату, еще не существовало микросхемы ADS1299. Это тоже АЦП, но специализированный для ЭЭГ. Поэтому с ней можно не использовать дополнительные усилители на входе, таким образом, размер, стоимость и сложность аналоговой платы можно существенно уменьшить.</p>
+                <p>Важным моментом я считаю проектирование питания для прецизионных аналоговых схем. Я использовал специальные линейные регуляторы, которые умеют хорошо давить шум. Называются TPS7A4901 и TPS7A3001 (для положительного и отрицательного напряжения).</p>
+            </div>
+            <div id="doc-EEG-digital" class="doc-section">
+                <h3>Цифровое</h3>
+                <p>Если вы когда-нибудь будете что-то такое строить, то здесь надо использовать нечто быстрое, какой-нибудь ARM. Чтобы передать как можно больше килосемплов на компьютер.</p>
+                <p>У меня было два подхода (ниже будут фотографии двух энцефалографов). Первый — передача сигнала по радио; второй — по USB напрямую. Для передачи по радио я использовал ZigBee, при этом удалось достичь скорости в около 200 семплов в секунду (то есть, 200 пакетов информации, содержащих состояние каждого из восьми датчиков). По USB мне удавалось передать около 5000 семплов в секунду.</p>
+                <p><strong>Вариант 1 (радио).</strong> Для передачи по радио использовался zigbee-модуль фирмы Microchip. За считывание информации с АЦП и передачу её по радио отвечал контрооллер PIC24HJ128GP. На плате также есть микросхема заряда литий-ионного аккумулятора, светодиод, показывающий состояние заряда, USB-порт для заряда, а также DC-DC преобразователи, которые производят ±5 вольт. Для питания цифровых схем используется 5 вольт, кроме того, ±5 вольт подаются на аналоговую плату (где понижаются до ±2.5 вольт регуляторами с подавлением шума, про них написано выше).</p>
+                <div class="wide_img"><img src="http://vladimirgrankovsky.net/donntu/img/thesis3.jpg" alt="Цифровая плата (радио)" height="520" style="width:100%" /></div>
+                <p>На фотке под цифровой платой видно также кусочек первой версии аналоговой платы (ниже, в результатах, будет совместная фотка).</p>
+                <p>Приемная часть имеет контроллер PIC18F27J53 с аппаратной поддержкой USB (фирменные исходники USB не всегда работают идеально, кстати) и такой же zigbee-модуль. Также там есть несколько оптопар для управления чем-нибудь (я подключал туда пульт управления дистанционной машинкой). Корпус собран из акриловых частей, которые я разработал и заказал вырезать лазером.</p>
+                <p><img src="http://vladimirgrankovsky.net/donntu/img/thesis4.jpg" alt="Приемная часть" height="401" style="width:100%" /></p>
+                <p><strong>Вариант 2 (напрямую по USB).</strong> Для общения между компьютером по USB и АЦП я использовал контроллер PIC18F2550. Чтобы всё было хорошо, между этой цифровой платой, подключенной к компьютеру, и аналоговой платой, я сделал гальваническую развязку (желтенькая платка). Для этого я использовал чип ADUM1402 и DC-DC преобразователь с гальванической развязкой, который выдает ±5 вольт, питающие аналоговую плату (преобразователь не видно, он снизу).</p>
+                <p><img src="http://vladimirgrankovsky.net/donntu/img/thesis5.jpg" alt="Цифровая плата (USB)" height="518" style="width:100%" /></p>
+            </div>
+            <div id="doc-EEG-result" class="doc-section">
+                <h3>Результат</h3>
+                <p>Я собрал два энцефалографа. <strong>Первый</strong> (беспроводной; я разработал и заказал лазерную резку акрила для корпуса):</p>
+                <div class="wide_img"><img src="http://vladimirgrankovsky.net/donntu/img/thesis6.jpg" alt="Беспроводной энцефалограф" height="831" style="width:100%" /></div>
+                <div class="wide_img"><img src="http://vladimirgrankovsky.net/donntu/img/thesis7.jpg" alt="Шлем к беспроводному энцефалографу" height="715" style="width:100%" /></div>
+                <p><strong>Второй</strong> (USB):</p>
+                <div class="wide_img"><img src="http://vladimirgrankovsky.net/donntu/img/thesis8.jpg" alt="Энцефалограф" height="582" style="width:100%" /></div>
+                <div class="wide_img"><img src="http://vladimirgrankovsky.net/donntu/img/thesis9.jpg" alt="Шлем к энцефалографу" height="791" style="width:100%" /></div>
+            </div>
+        </div>
+
+        <div id="doc-SGR" class="doc-section">
+          <h2>Как я мерял КГР</h2>
+          <p>Кожно-гальваническое сопротивление мерять существенно проще, чем ЭЭГ.</p>
+          <p>Я использовал для этого один инструментальный усилитель INA114. В схеме после него идет еще один усилитель (OP291), включенный как повторитель. Его цель — ограничивать сигнал диапазоном напряжения питания усилителя OP291. Опять же, большое внимание уделено аналоговому питанию. Снова использованы регуляторы с подавлением шума TPS7A4901 и TPS7A3001.</p>
+          <div class="wide_img"><img src="http://vladimirgrankovsky.net/donntu/img/thesis10.jpg" alt="Схема измерителя КГР" height="613" style="width:100%" /></div>
+          <p>Для настройки измерителя предусмотрены два переменных резистора. Первый задает коэффициент усиления инструментального усилителя INA114. Второй устанавливает уровень сигнала, относительно которого измеряется напряжение. На фотографии видно зеленую аналоговою плату измерителя (сверху часть, отвечающая за питание; в центре усилитель INA114, слева от него OP291).</p>
+          <div class="wide_img"><img src="http://vladimirgrankovsky.net/donntu/img/thesis11.jpg" alt="Измеритель КГР (аналоговая плата)" height="765" style="width:100%" /></div>
+          <p>Я решил разобраться с контроллерами TI MSP430, поэтому цифровая часть измерителя работает на них. В моем случае один из контроллеров считывает напряжение с одной из ножек и отправляет его по UART на преобразователь UART-USB (FT232R) и на второй контроллер, который отображает результат на экранчике. В качестве экранчика я использовал дисплей от Nokia 5110, популярный среди DIY-шников.</p>
+          <p>Устройство можно подключить по USB к компьютеру, тогда оно будет отправлять на компьютер измерения. Но оно также может работать без компьютера от батареи (которая заряжается при подключении) и отображать график изменения сопротивления на экране.</p>
+          <p>Корпус устройства я тоже сделал из акрила, вырезанного по моему чертежу на лазерном станке.</p>
+            <div id="doc-SGR-result" class="doc-section">
+                <h3>Результат</h3>
+                    В результате получилась вот такая милая коробочка, к которой можно подключить электроды через 3.5-мм разъем.
+                    <p><img src="http://vladimirgrankovsky.net/donntu/img/thesis12.jpg" alt="Измеритель КГР" height="653" style="width:100%" /></p>
+                    <div class="wide_img"><img src="http://vladimirgrankovsky.net/donntu/img/thesis13.jpg" alt="Измеритель КГР" height="706" style="width:100%" /></div>
+            </div>
+        </div>
+
+        <div id="doc-links" class="doc-section">
+          <h2>Чтиво в тему</h2>
+          <p><a href="http://www.nature.com/srep/2013/130228/srep01319/full/srep01319.html">A Brain-to-Brain Interface for Real-Time Sharing of Sensorimotor Information</a> — о том, как наладили связь мозг-мозг между двумя мышками. Одна мышка стала передавать информацию другой мышке.</p>
+          <p><a href="http://habrahabr.ru/post/182656/">Протез от DARPA — настоящее технологическое чудо</a> — наверное, самый крутой на момент создания этого списка протез.</p>
+          <p><a href="http://gizmodo.com/5960154/mind+controlled-robots-bring-us-one-step-closer-to-our-avatar-future">Mind-Controlled Robots Bring Us One Step Closer To Our Avatar Future</a> — робот, управляемый мыслью.</p>
+          <p><a href="http://www.ted.com/talks/vs_ramachandran_the_neurons_that_shaped_civilization.html">VS Ramachandran: The neurons that shaped civilization | Video on TED.com</a> — Очень крутой чувак рассказывает о зеркальных нейронах.</p>
+          <p><a href="http://www.sciencedaily.com/releases/2012/11/121129093417.htm">Making Music Together Connects Brains</a> — интересный эксперимент совместного написания музыки при помощи ЭЭГ.</p>
+          <p><a href="http://hackaday.com/2012/09/10/mind-controlling-cockroaches/">Mind-controlling cockroaches</a> — управляемые тараканы.</p>
+          <p><a href="http://wiki.backyardbrains.com/RoboRoach_Surgery">RoboRoach Surgery</a> — операция на тараканах с целью интерфейса таракан-машина (18+).</p>
+          <p><a href="http://www.youtube.com/watch?v=vb3cPjkjbi4">Brain Chip Implant Uses Power Of Thought</a> — обезьяна управляет роботизированной рукой мыслью (имплантант в двигательном кортексе).</p>
+          <p><a href="http://www.youtube.com/watch?v=Z8HeFNJjuj0">TEDxWarwick - Kevin Warwick - Implants and Technology</a> — Чувак соединил себя с женой (секс стал в тыщу раз круче).</p>
+          <p><a href="http://www.youtube.com/watch?v=gZCgWmose3c">Andres Lozano: Parkinson's, depression and the switch that might turn them off</a> — можно выключить болезнь Паркинсона имплантантом в мозге.</p>
+          <p><a href="http://www.youtube.com/watch?v=_wdi7QDBnS4">Epilepsy Surgery: Placement of Grid and Depth Electrodes</a> — размещение электродов на мозге (мясо, 18+).</p>
+          <p><a href="http://www.youtube.com/watch?v=C7H_M8-dBHc">Woman Uses Her Thought to Control Robot to Feed Chocolate</a> — Девушка управляет роботизированной рукой мысль и ест шоколадку (имплантант в мозге).</p>
+          <p><a href="http://www.sciencedaily.com/releases/2012/11/121128093438.htm">Thought-Controlled Prosthesis Changing Lives of Amputees</a> — еще один управляемый мыслью протез.</p>
+          <p><a href="http://www.izhikevich.org/human_brain_simulation/Blue_Brain.htm">Computer Model of the Human Brain</a> — Чувак пытается моделировать мозг на суперкомпьютере.</p>
+          <p><a href="http://www.amazon.com/Neuroscience-Fifth-Edition-Dale-Purves/dp/0878936955/ref=tmm_hrd_title_0">Neuroscience, Fifth Edition</a> — Самый интересный учебник по нейронаукам (цветные картинки!).</p>
+          <p><a href="http://humanconnectome.org">Human Connectome Project</a> — Проект о полном картографировании мозга.</p>
+          <p><a href="http://people.brandeis.edu/~grinkus/">Gerard (Rod) Rinkus</a> — Чувак придумал модель неокортекса (см. другую такую модель по запросу <em>numenta</em>).</p>
+          <p><a href="https://www.facebook.com/NeuroscienceResearchTechniques?group_id=0">Neuroscience Research Techniques</a> — Новости нейронаук на фейсбуке.</p>
+          <p><a href="http://www.diytdcs.com">DIY tDCS</a> — Электростимуляция мозга (сделай сам).</p>
+          <p><a href="http://www.psych.upenn.edu/stslab/assets/pdf/Chrysikou_2011_CNS(1).pdf">Transcranial Direct Current Stimulation Over the Left Prefrontal Cortex Facilitates Cognitive Flexibility in Tool Use</a> — Электростимуляция повышает «креативность» мозга.</p>
+          <p><a href="http://openeeg.sourceforge.net/doc/">OpenEEG</a> — проект ЭЭГ с открытым кодом.</p>
+          <p><a href="http://www.shifz.org/moosec/index-Dateien/Page431.htm">MonolithEEG</a> — еще один проект ЭЭГ с открытым кодом.</p>
+          <p><a href="http://pceeg.sourceforge.net/Design.html">The Programmable Chip EEG BCI</a> — еще один проект ЭЭГ с открытым кодом.</p>
+          <p><a href="https://www.olimex.com/Products/EEG/OpenEEG/EEG-SMT/">Olimex EEG-SMT</a> — еще один проект ЭЭГ с открытым кодом.</p>
+          <p><a href="http://sccn.ucsd.edu/eeglab/">EEGLAB</a> — анализ ЭЭГ в МАТЛАБЕ.</p>
+          <p><a href="http://www.hindawi.com/journals/cin/2011/406391/">pyEEG</a> — Анализ ЭЭГ в python.</p>
+          <p><a href="http://www.emotiv.com">emotiv</a> — Самые нормальные ЭЭГ-шлемы для исследований (недорогие, многоканальные).</p>
+          <p><a href="http://www.ti.com/product/ads1299">ADS1299</a> — специализированная микросхема для ЭЭГ (8-канальный 24-битный АЦП с офигенно низким шумом на входе и предусилителями + RLD).</p>
+          <p><a href="http://www.ti.com/general/docs/lit/getliterature.tsp?baseLiteratureNumber=sbaa188">Improving Common-Mode Rejection Using the Right-Leg Drive Aplifier / V. Acharya (Texas Instruments)</a> — об использовании RLD для подавления шума промышленной частоты 50 Гц.</p>
+          <p><a href="http://www.ti.com/lit/an/sbaa185/sbaa185.pdf">Thermal Noise Analysis in ECG Applications</a> — о температурном шуме в ЭКГ.</p>
+          <p><a href="http://www.ti.com/general/docs/lit/getliterature.tsp?baseLiteratureNumber=slvt170">Power Management for Precision Analog</a> — крутые регуляторы напряжения для прецизионных аналоговых схем.</p>
+          <p><a href="http://www.ted.com/talks/lang/ru/ed_boyden.html">Эд Бойден: Переключатель для нейронов</a> — об оптогенетике.</p>
+          <p><a href="http://www.extremetech.com/extreme/151696-ibm-on-track-to-building-artificial-synapses">IBM takes a step towards building artificial semiconductor synapses</a> — Ай-Би-Эм делают искусственные синапсы.</p>
+          <p><a href="http://centaur.reading.ac.uk/8181/1/60_1_5.pdf">Controlling a mobile robot with a biological brain</a> — Мозг «из пробирки» управляет роботом</p>
+          <p><a href="http://www.humanbrainproject.eu">The Human Brain Project</a>. Актуальный проект моделирования мозга.</p>
+        </div>
+
+    </div>
+</div>
+
+<div id="script_holder"></div>
+<script type="text/javascript">
+    loadToElement("http://vladimirgrankovsky.net/donntu/thesis_script.htm","", "#script_holder");
+</script>
