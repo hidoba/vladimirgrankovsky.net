@@ -1,7 +1,7 @@
 /* Curtain.js - Example page */
 
 /* Google Font */
-@import url(http://fonts.googleapis.com/css?family=PT+Serif|PT+Sans+Narrow:700|PT+Sans);
+@import url(https://fonts.googleapis.com/css?family=PT+Serif|PT+Sans+Narrow:700|PT+Sans);
 
 
 /* RESET */
@@ -61,7 +61,7 @@ em{
 
 /* Sliding panels */
 .curtains>li {
-    background:#FFF url(http://vladimirgrankovsky.net/donntu/img/blizzard.png);
+    background:#FFF url(/donntu/img/blizzard.png);
     box-shadow:0 0 12px #666;
 }
     .curtains>li:last-child{box-shadow:none}
@@ -110,7 +110,7 @@ em{
 /* Section 1 */
 
 #section-1{
-    background:url(http://vladimirgrankovsky.net/donntu/img/bg1.png) 50% 0 no-repeat;
+    background:url(/donntu/img/bg1.png) 50% 0 no-repeat;
     background-color: black;
     background-size:cover;
 }
